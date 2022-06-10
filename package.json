@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "nodemon",
     "test": "jest",
-    "start": "ts-node-dev --transpile-only --ignore-watch node_modules --respawn src/server.ts"
+    "start": "ts-node-dev --transpile-only --ignore-watch node_modules --respawn src/server.ts",
+    "build": "tsc -p .",
+    "clean": "tsc --build --clean"
   },
   "dependencies": {
     "cors": "^2.8.5",

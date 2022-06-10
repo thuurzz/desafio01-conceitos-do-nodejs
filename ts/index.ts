@@ -75,7 +75,7 @@ app.post('/users', (request: Request, response: Response) => {
   // insere na lista
   users.push(user);
   // envia resposta
-  response.status(200).json(user);
+  response.status(201).json(user);
 });
 
 app.get('/todos', checksExistsUserAccount, (request: Request, response: Response) => {
@@ -85,7 +85,7 @@ app.get('/todos', checksExistsUserAccount, (request: Request, response: Response
   const user = users.find((user) => username === user.username);
   const list = user?.todos
   // retorna a lista de to-dos do usuário 
-  return response.status(200).json(list);
+  return response.status(201).json(list);
 });
 
 app.post('/todos', checksExistsUserAccount, (request: Request, response: Response) => {
@@ -104,7 +104,7 @@ app.post('/todos', checksExistsUserAccount, (request: Request, response: Respons
     created_at: new Date()
   }
   user?.todos.push(todo);
-  return response.status(200).json(todo);
+  return response.status(201).json(todo);
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request: Request, response: Response) => {
@@ -119,9 +119,9 @@ app.put('/todos/:id', checksExistsUserAccount, (request: Request, response: Resp
   if (todo) {
     todo.title = title;
     todo.deadline = deadline;
-    return response.status(201).send();
+    return response.status(201).json(todo);
   } else {
-    return response.status(400).json({
+    return response.status(404).json({
       error: "Todo does not exists"
     });
   }
@@ -138,9 +138,9 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request: Request, respons
   // se encontra o todo, altera done: true
   if (todo) {
     todo.done = true;
-    return response.status(201).send();
+    return response.status(201).json(todo);
   } else {
-    return response.status(400).json({
+    return response.status(404).json({
       error: "Todo does not exists"
     });
   }
@@ -157,14 +157,12 @@ app.delete('/todos/:id', checksExistsUserAccount, (request: Request, response: R
   if (todo && user) {
     const todoIndex = user?.todos.indexOf(todo);
     user.todos.splice(todoIndex, 1);
-    return response.status(201).json({
-      deleted: todo
-    });
+    return response.status(204).send();
   } else {
-    return response.status(400).json({
+    return response.status(404).json({
       error: "Todo does not exists"
     });
   }
-  });
+});
 
 module.exports = app;
